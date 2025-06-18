@@ -1,0 +1,6 @@
+@ChronosHubTestNoDB_HostAddress = http://localhost:5159
+
+GET {{ChronosHubTestNoDB_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
