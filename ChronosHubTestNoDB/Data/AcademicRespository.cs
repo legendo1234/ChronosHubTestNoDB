@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq; // Make sure to include this for LINQ
 using ChronosHubTestNoDB.Models;
 
 namespace ChronosHubTestNoDB.Data
@@ -34,41 +35,30 @@ namespace ChronosHubTestNoDB.Data
 
         public Article? GetArticle(int id)
         {
-            foreach (var article in _articles)
-            {
-                if (article.Id == id)
-                    return article;
-            }
-            return null;
+            var result = from article in _articles
+                         where article.Id == id
+                         select article;
+
+            return result.FirstOrDefault();
         }
 
         public IEnumerable<Article> GetByAuthor(int authorId)
         {
-            List<Article> result = new();
-            foreach (var article in _articles)
-            {
-                foreach (var author in article.Authors)
-                {
-                    if (author.Id == authorId)
-                    {
-                        result.Add(article);
-                        break;
-                    }
-                }
-            }
+            var result = from article in _articles
+                         where (from author in article.Authors
+                                where author.Id == authorId
+                                select author).Any()
+                         select article;
+
             return result;
         }
 
         public IEnumerable<Article> GetByJournal(int journalId)
         {
-            List<Article> result = new();
-            foreach (var article in _articles)
-            {
-                if (article.Journal.Id == journalId)
-                {
-                    result.Add(article);
-                }
-            }
+            var result = from article in _articles
+                         where article.Journal.Id == journalId
+                         select article;
+
             return result;
         }
 
